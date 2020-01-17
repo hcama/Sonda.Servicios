@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Sonda.Core.Models
+namespace Sonda.Api.Resources
 {
-    public class Cliente
+    public class SaveClienteResource
     {
-        public int Id { get; set; }
         public string Nombre { get; set; }
         public string ApellidoPaterno { get; set; }
         public string ApellidoMaterno { get; set; }
         public int TipoClienteId { get; set; }
-        public TipoCliente TipoCliente { get; set; }
     }
 }

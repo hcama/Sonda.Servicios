@@ -27,7 +27,7 @@ namespace Sonda.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nombre = table.Column<string>(nullable: true),
                     ApellidoPaterno = table.Column<string>(nullable: true),
-                    ApellidoMaterno = table.Column<int>(nullable: false),
+                    ApellidoMaterno = table.Column<string>(nullable: true),
                     TipoClienteId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>

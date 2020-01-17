@@ -23,5 +23,12 @@ namespace Sonda.Data.Repositories
             return await AplicationDbContext.Clientes.ToListAsync();
 
         }
+
+        public async Task<Cliente> getClienteId(int id)
+        {
+            return await AplicationDbContext.Clientes
+            .SingleOrDefaultAsync(m => m.Id == id); 
+        }
+
     }
 }

@@ -20,5 +20,32 @@ namespace Sonda.Services
             return await _unitOfWork.Clientes
                 .getTodosClientes();
         }
+
+        public async Task<Cliente> createCliente(Cliente newCliente)
+        {
+            await _unitOfWork.Clientes.AddAsync(newCliente);
+            await _unitOfWork.CommitAsync();
+            return newCliente;
+        }
+
+        public async Task deleteCliente(Cliente cliente)
+        {
+            _unitOfWork.Clientes.Remove(cliente);
+            await _unitOfWork.CommitAsync();
+        }
+
+        public async Task<Cliente> getClienteId(int id)
+        {
+            return await _unitOfWork.Clientes.getClienteId(id);
+    }
+
+        public async Task updateCliente(Cliente clienteToBeUpdated, Cliente cliente)
+        {
+            clienteToBeUpdated.Nombre = cliente.Nombre;
+            clienteToBeUpdated.ApellidoPaterno = cliente.ApellidoPaterno;
+            clienteToBeUpdated.ApellidoMaterno = cliente.ApellidoMaterno;
+            clienteToBeUpdated.TipoClienteId = cliente.TipoClienteId;
+            await _unitOfWork.CommitAsync();
+        }
     }
 }
