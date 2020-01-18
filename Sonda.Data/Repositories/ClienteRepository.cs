@@ -9,7 +9,7 @@ namespace Sonda.Data.Repositories
 {
     public class ClienteRepository : Repository<Cliente>, IClienteRepository
     {
-        public ClienteRepository(AplicationDbContext context) 
+        public ClienteRepository(AplicationDbContext context)
             : base(context)
         {
 
@@ -23,5 +23,12 @@ namespace Sonda.Data.Repositories
             return await AplicationDbContext.Clientes.ToListAsync();
 
         }
+
+        public async Task<Cliente> getClienteId(int id)
+        {
+            return await AplicationDbContext.Clientes
+            .SingleOrDefaultAsync(m => m.Id == id);
+        }
+
     }
 }

@@ -10,7 +10,7 @@ using Sonda.Api.Validators;
 using Sonda.Core.Models;
 using Sonda.Core.Services;
 
-[assembly:ApiConventionType(typeof(DefaultApiConventions))]
+[assembly: ApiConventionType(typeof(DefaultApiConventions))]
 namespace Sonda.Api.Controllers
 {
     [Route("api/[controller]")]
@@ -100,7 +100,7 @@ namespace Sonda.Api.Controllers
             var requestIsInvalid = id == 0 || !validationResult.IsValid;
 
             if (requestIsInvalid)
-                return BadRequest(validationResult.Errors); 
+                return BadRequest(validationResult.Errors);
 
             var clienteToBeUpdate = await _clienteService.getClienteId(id);
 

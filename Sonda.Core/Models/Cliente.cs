@@ -9,7 +9,7 @@ namespace Sonda.Core.Models
         public int Id { get; set; }
         public string Nombre { get; set; }
         public string ApellidoPaterno { get; set; }
-        public int ApellidoMaterno { get; set; }
+        public string ApellidoMaterno { get; set; }
         public int TipoClienteId { get; set; }
         public TipoCliente TipoCliente { get; set; }
     }

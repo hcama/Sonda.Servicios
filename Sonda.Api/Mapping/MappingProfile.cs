@@ -14,11 +14,13 @@ namespace Sonda.Api.Mapping
         {
             // Domain to Resource
             CreateMap<TipoCliente, TipoClienteResource>();
-           // CreateMap<Cliente, ArtistResource>();
+            CreateMap<Cliente, ClienteResource>();
+            CreateMap<Cliente, SaveClienteResource>();
 
             // Resource to Domain
             CreateMap<TipoClienteResource, TipoCliente>();
-            //CreateMap<ArtistResource, Artist>();
+            CreateMap<ClienteResource, Cliente>();
+            CreateMap<SaveClienteResource, Cliente>();
         }
     }
 }
