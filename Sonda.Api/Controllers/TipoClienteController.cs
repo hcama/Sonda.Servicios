@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Sonda.Api.Resources;
@@ -13,6 +14,7 @@ namespace Sonda.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors]
     public class TipoClienteController : Controller
     {
         private readonly ITipoClienteService _tipoClienteService;
@@ -30,7 +32,7 @@ namespace Sonda.Api.Controllers
         /// <response code="200">Retorna todos los tipos de clientes</response>
         [HttpGet("")]
         [ProducesResponseType(typeof(IEnumerable<TipoClienteResource>) ,StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<TipoClienteResource>>> GetAllMusics()
+        public async Task<ActionResult<IEnumerable<TipoClienteResource>>> getTodosTiposClientes()
         {
             var tipoClientes = await _tipoClienteService.getTodosTiposClientes();
             var tipoClienteResources = _mapper.Map<IEnumerable<TipoCliente>, IEnumerable<TipoClienteResource>>(tipoClientes);

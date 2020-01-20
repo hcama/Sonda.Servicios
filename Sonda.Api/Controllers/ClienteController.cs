@@ -1,20 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Sonda.Api.Resources;
 using Sonda.Api.Validators;
 using Sonda.Core.Models;
 using Sonda.Core.Services;
+using OfficeOpenXml;
 
-[assembly:ApiConventionType(typeof(DefaultApiConventions))]
+
+[assembly: ApiConventionType(typeof(DefaultApiConventions))]
 namespace Sonda.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors]
     public class ClienteController : Controller
     {
         // GET: /<controller>/
@@ -38,6 +43,68 @@ namespace Sonda.Api.Controllers
             var clienteResources = _mapper.Map<IEnumerable<Cliente>, IEnumerable<ClienteResource>>(clientes);
 
             return Ok(clienteResources);
+        }
+        /// <summary>
+        /// Muestra todos los  clientes en excel.
+        /// </summary>
+        /// <returns>Todos los clientes en excel</returns>   
+        /// <response code="200">Retorna todos los clientes en excel</response>
+        [HttpGet("excel")]
+        public async Task<ActionResult<IEnumerable<ClienteResource>>> getTodosClientesdExcel()
+        {
+            var clientes = await _clienteService.getTodosClientes();
+            var clienteResources = _mapper.Map<IEnumerable<Cliente>, IEnumerable<ClienteResource>>(clientes);
+            var stream = new MemoryStream();
+
+            using (var package = new ExcelPackage(stream))
+            {
+                var workSheet = package.Workbook.Worksheets.Add("Sheet1");
+                workSheet.Cells.LoadFromCollection(clienteResources, true);
+                package.Save();
+            }
+            stream.Position = 0;
+
+            string excelName = $"ReporteClientes-{DateTime.Now.ToString("yyyyMMddHHmmssfff")}.xlsx";   
+
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
+        }
+        /// <summary>
+        /// Muestra todos los  clientes por TipoClienteId.
+        /// </summary>
+        /// <returns>Todos los clientes por TipoClienteId</returns>   
+        /// <response code="200">Retorna todos los tipos de clientes por TipoClienteId</response>
+        [HttpGet("tipoCliente/{tipoClienteId}")]
+        public async Task<ActionResult<IEnumerable<ClienteResource>>> getTodosClientesbyTipoClienteId(int tipoClienteId)
+        {
+            var clientes = await _clienteService.getTodosClientesbyTipoClienteId(tipoClienteId);
+            var clienteResources = _mapper.Map<IEnumerable<Cliente>, IEnumerable<ClienteResource>>(clientes);
+
+            return Ok(clienteResources);
+        }
+        /// <summary>
+        /// Muestra todos los  clientes por TipoClienteId en excel.
+        /// </summary>
+        /// <returns>Todos los clientes por TipoClienteId en excel</returns>   
+        /// <response code="200">Retorna todos los tipos de clientes por TipoClienteId en excel</response>
+        [HttpGet("excel/tipoCliente/{tipoClienteId}")]
+        public async Task<ActionResult<IEnumerable<ClienteResource>>> getTodosClientesbyTipoClienteIdExcel(int tipoClienteId)
+        {
+            var clientes = await _clienteService.getTodosClientesbyTipoClienteId(tipoClienteId);
+            var clienteResources = _mapper.Map<IEnumerable<Cliente>, IEnumerable<ClienteResource>>(clientes);
+
+            var stream = new MemoryStream();
+
+            using (var package = new ExcelPackage(stream))
+            {
+                var workSheet = package.Workbook.Worksheets.Add("Sheet1");
+                workSheet.Cells.LoadFromCollection(clienteResources, true);
+                package.Save();
+            }
+            stream.Position = 0;
+
+            string excelName = $"ReporteClientes-{DateTime.Now.ToString("yyyyMMddHHmmssfff")}.xlsx";
+     
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName); 
         }
         /// <summary>
         /// Muestra un cliente por id.
@@ -100,7 +167,7 @@ namespace Sonda.Api.Controllers
             var requestIsInvalid = id == 0 || !validationResult.IsValid;
 
             if (requestIsInvalid)
-                return BadRequest(validationResult.Errors); 
+                return BadRequest(validationResult.Errors);
 
             var clienteToBeUpdate = await _clienteService.getClienteId(id);
 

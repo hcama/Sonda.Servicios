@@ -8,7 +8,8 @@ namespace Sonda.Core.Services
 {
     public interface IClienteService
     {
-        Task<IEnumerable<Cliente>> getTodosClientes();  
+        Task<IEnumerable<Cliente>> getTodosClientes();
+        Task<IEnumerable<Cliente>> getTodosClientesbyTipoClienteId(int tipoClienteId);
         Task<Cliente> getClienteId(int id);
         Task<Cliente> createCliente(Cliente newCliente);
         Task updateCliente(Cliente clienteToBeUpdated, Cliente cliente);

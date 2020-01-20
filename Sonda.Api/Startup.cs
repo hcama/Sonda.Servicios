@@ -34,6 +34,17 @@ namespace Sonda.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+
+                        //builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod().WithExposedHeaders("Content-Disposition"); ;
+                        builder.WithOrigins("http://sonda-front-end.000webhostapp.com").AllowAnyHeader().AllowAnyMethod();
+                    });
+
+            });
             services.AddControllers();
             services.AddDbContext<AplicationDbContext>(options
                 => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnectionString"),
@@ -76,11 +87,10 @@ namespace Sonda.Api
             {
                 app.UseDeveloperExceptionPage();
             }
-
+           
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
+            app.UseCors();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -93,6 +103,7 @@ namespace Sonda.Api
                 c.RoutePrefix = "";
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sonda Api V1");
             });
+           
         }
     }
 }

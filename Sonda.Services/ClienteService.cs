@@ -37,7 +37,7 @@ namespace Sonda.Services
         public async Task<Cliente> getClienteId(int id)
         {
             return await _unitOfWork.Clientes.getClienteId(id);
-    }
+        }
 
         public async Task updateCliente(Cliente clienteToBeUpdated, Cliente cliente)
         {
@@ -46,6 +46,12 @@ namespace Sonda.Services
             clienteToBeUpdated.ApellidoMaterno = cliente.ApellidoMaterno;
             clienteToBeUpdated.TipoClienteId = cliente.TipoClienteId;
             await _unitOfWork.CommitAsync();
+        }
+
+        public async Task<IEnumerable<Cliente>> getTodosClientesbyTipoClienteId(int tipoClienteId)
+        {
+            return await _unitOfWork.Clientes
+                .getTodosClientesbyTipoClienteId(tipoClienteId);
         }
     }
 }

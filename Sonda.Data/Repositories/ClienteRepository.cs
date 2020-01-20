@@ -9,7 +9,7 @@ namespace Sonda.Data.Repositories
 {
     public class ClienteRepository : Repository<Cliente>, IClienteRepository
     {
-        public ClienteRepository(AplicationDbContext context) 
+        public ClienteRepository(AplicationDbContext context)
             : base(context)
         {
 
@@ -27,8 +27,14 @@ namespace Sonda.Data.Repositories
         public async Task<Cliente> getClienteId(int id)
         {
             return await AplicationDbContext.Clientes
-            .SingleOrDefaultAsync(m => m.Id == id); 
+            .SingleOrDefaultAsync(m => m.Id == id);
         }
 
+        public async Task<IEnumerable<Cliente>> getTodosClientesbyTipoClienteId(int tipoClienteId)
+        {
+            return await AplicationDbContext.Clientes.
+                Where(m => m.TipoClienteId == tipoClienteId)
+                .ToListAsync();
+        }
     }
 }

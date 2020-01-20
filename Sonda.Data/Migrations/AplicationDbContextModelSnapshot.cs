@@ -25,8 +25,8 @@ namespace Sonda.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ApellidoMaterno")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ApellidoMaterno")
+                        .HasColumnType("int");
 
                     b.Property<string>("ApellidoPaterno")
                         .HasColumnType("nvarchar(max)");

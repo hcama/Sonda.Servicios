@@ -4,9 +4,10 @@ using System.Threading.Tasks;
 
 namespace Sonda.Core.Repositories
 {
-    public interface  IClienteRepository : IRepository<Cliente>
+    public interface IClienteRepository : IRepository<Cliente>
     {
         Task<IEnumerable<Cliente>> getTodosClientes();
         Task<Cliente> getClienteId(int id);
+        Task<IEnumerable<Cliente>> getTodosClientesbyTipoClienteId(int tipoClienteId);
     }
 }
