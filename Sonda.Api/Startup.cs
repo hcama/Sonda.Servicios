@@ -3,21 +3,26 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Sonda.Core;
 using Sonda.Core.Services;
 using Sonda.Data;
+using Sonda.Data.Security;
 using Sonda.Services;
 
 namespace Sonda.Api
@@ -40,15 +45,28 @@ namespace Sonda.Api
                     builder =>
                     {
 
-                        //builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod().WithExposedHeaders("Content-Disposition"); ;
-                        builder.WithOrigins("http://sonda-front-end.000webhostapp.com").AllowAnyHeader().AllowAnyMethod();
+                        //builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod().WithExposedHeaders("Content-Disposition");
+                        builder.WithOrigins("http://sonda-front-end.000webhostapp.com").AllowAnyHeader().AllowAnyMethod().WithExposedHeaders("Content-Disposition");
                     });
 
             });
             services.AddControllers();
             services.AddDbContext<AplicationDbContext>(options
-                => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnectionString"),
-                 x => x.MigrationsAssembly("Sonda.Data")));
+              => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnectionString"),
+               x => x.MigrationsAssembly("Sonda.Data")));
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+               .AddEntityFrameworkStores<AplicationDbContext>().AddDefaultTokenProviders();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer=false,
+                    ValidateAudience=false,
+                    ValidateLifetime=true,
+                    ValidateIssuerSigningKey=true,
+                    IssuerSigningKey=new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:key"])),
+                    ClockSkew=TimeSpan.Zero
+                });
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IClienteService, ClienteService>();
             services.AddTransient<ITipoClienteService, TipoClienteService>();
@@ -91,6 +109,7 @@ namespace Sonda.Api
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseCors();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

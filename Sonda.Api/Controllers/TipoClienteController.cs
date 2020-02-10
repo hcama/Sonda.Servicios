@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,11 +12,13 @@ using Sonda.Api.Resources;
 using Sonda.Core.Models;
 using Sonda.Core.Services;
 
+[assembly: ApiConventionType(typeof(DefaultApiConventions))]
 namespace Sonda.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [EnableCors]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class TipoClienteController : Controller
     {
         private readonly ITipoClienteService _tipoClienteService;
@@ -30,6 +34,7 @@ namespace Sonda.Api.Controllers
         /// </summary>
         /// <returns>Todos los tipos de clientes</returns>   
         /// <response code="200">Retorna todos los tipos de clientes</response>
+        /// <response code="401">No autorizado</response>
         [HttpGet("")]
         [ProducesResponseType(typeof(IEnumerable<TipoClienteResource>) ,StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<TipoClienteResource>>> getTodosTiposClientes()

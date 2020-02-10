@@ -12,7 +12,8 @@ using Sonda.Api.Validators;
 using Sonda.Core.Models;
 using Sonda.Core.Services;
 using OfficeOpenXml;
-
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 [assembly: ApiConventionType(typeof(DefaultApiConventions))]
 namespace Sonda.Api.Controllers
@@ -20,6 +21,7 @@ namespace Sonda.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [EnableCors]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ClienteController : Controller
     {
         // GET: /<controller>/
