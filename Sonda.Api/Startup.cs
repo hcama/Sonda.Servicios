@@ -45,8 +45,11 @@ namespace Sonda.Api
                     builder =>
                     {
 
-                        //builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod().WithExposedHeaders("Content-Disposition");
+
                         builder.WithOrigins("http://sonda-front-end.000webhostapp.com").AllowAnyHeader().AllowAnyMethod().WithExposedHeaders("Content-Disposition");
+
+                        //builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod().WithExposedHeaders("Content-Disposition"); ;
+
                     });
 
             });
